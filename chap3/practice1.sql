@@ -320,3 +320,45 @@ select date_format(STR_TO_DATE('2025년12월25일','%Y년%m월%d일'), '%W')
 SELECT NAME, POSITION , DATE_FORMAT(hiredate, '%Y년%m월%d일') 입사일,
 DATE_FORMAT(date_add(hiredate, INTERVAL 3 MONTH), '%Y년%m월%d일') 정식입사일
 FROM professor
+
+/*
+	1. 집합연산자
+		union		: 합집합, 중복되지 않는다.
+		union all : 중복됨. 두개의 쿼리의 결과를 연결하여 조회
+		=> select에서 조회되는 컬럼의 수가 같아야 한다.
+		intersect : 교집합. and 조건문으로 대부분 가능
+	
+	2. 함수: 단일행 함수 : 하나의 레코드만 처리되는 함수
+						where  조건문에서 사용 가능
+			 : 그룹 함수: 여러개의 레코드에서 처리되는 함수.
+			 			having 조건문에서 사용 가능함
+	3. 문자열 관련 함수
+		- 대소문자 변경 : upeer, lower
+		- 문자열의 길이 : length(바이트수), char_length(문자열의길이)
+		- 부분문자열	  : substr(문자열,시작인덱스, 갯수), left(문자열, 개수), right(문자열, 개수)
+		- 문자연결함수  : concat
+		- 문자위치		:instr(문자열, 문자)=>문자열에서 문자의 위치 인덱스 리턴, 인덱스는 1부터 시작
+		- 문자 추가		: lpad(문자열,전체자리수,채울문자),rpad(문자열, 전체자리수,채울문자)
+		- 문자제거		:trim(문자열) : 양쪽 공백을 제거
+							  ltrim(문자열): 왼쪽 공백을 제거
+							  rtrim (문자열):오른쪽 공백을 제거
+							  trim(leading|trailing|both 제거할 문자 from 문자열) : 지정한 문자를 제거
+							  			왼쪽 | 오른쪽 | 양쪽
+		- 문자 치환 	   :replace(문자열,문자1,문자2)=> 문자열에서 문자1을 문자2로 치환
+		- 그룹의 위치	  :find_in_set(문자,문자열)=> ,를가진 문자열에서 문자가 몇번째 위치에 있는지 리턴
+	4.숫자 관련 함수
+		- 반올림 : round(숫자, [소숫점이하자리수]) => 자릿수 생략시 정수로 출력
+		- 버림	:truncate(숫자, 소숫점이하자리수) => 자릿수 생략
+		- 나머지 : mod, %연산자 가능
+		- 제곱	:power(숫자1,숫자2):숫자1을 숫자2만큼 곱하기
+		- 근사정수 : ceil : 큰 근사정수
+						 floor: 작은 근사정수
+	5. 날짜 관련 함수
+		- 현재일시: now()
+		- 현재일자: curdate(), current_date, current_date()
+		- 년월일  : year, month, day, weekday(0(월)), dayofweek(1(일)), last_day(해당월의 마지막날짜)
+		- 이전/이후 : date_add|date_sub(날짜, interval 숫자 [시간단위])
+		- 날짜변환 : date_format : 날짜 => 문자열
+						 str_to_date : 문자열 => 날짜
+		%Y,%m,%d.....
+*/

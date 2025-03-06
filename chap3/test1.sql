@@ -54,8 +54,9 @@ WHERE empno IN ('2001','2005','2008')
 /*
 	9. EMP 테이블에서 사원이름의 첫 글자가 ‘주’인 사원의 이름, 급여를 조회하라.
 */
-SELECT ename, salary FROM emp
-WHERE ename LIKE '주%'
+SELECT ename, salary FROM emp WHERE ename LIKE '주%'
+SELECT ename, salary FROM emp WHERE LEFT(ename,1) = '주'
+SELECT ename, salary FROM emp WHERE substr(ename,1,1) = '주'
 /*
 	10. EMP 테이블에서 급여가 800 이상이고, 담당업무(JOB)이 차장인 
    사원의 사원번호, 성명, 담당업무, 급여, 입사일자, 부서번호를 출력하여라.
@@ -74,16 +75,15 @@ SELECT replace(NAME, SUBSTR(NAME, 2,1), '#')이름, major1 FROM student
 WHERE major1 = '101'
 /*
 	13. 102번 학과 학생의 이름과 전화번호, 전화번호의 국번부분만#으로 치환하여 출력하기(단 국번은 3자리로 간주함.)
+	02-1234-4567 : 1234가 국번 => 02-###4-4567
 */
-SELECT NAME, tel, REPLACE(tel, LEFT(tel, 3), '###') 전화번호2 FROM student
-WHERE major1 = 102 AND INSTR(tel , ')') = 4
-UNION
-SELECT NAME, tel, REPLACE(tel, LEFT(tel, 2), '##') 전화번호2 FROM student
-WHERE major1 = 102 AND INSTR(tel , ')') = 3
+SELECT NAME, tel ,REPLACE(tel, SUBSTR(tel,INSTR(tel,')')+1,3),'###') FROM student
+WHERE major1 = 102
 /*
 	14. 교수테이블의의  email 주소의 @다음의 3자리를 ###으로 치환하여 출력하기  교수의 이름, email, #mail을 출력하기
 */
-SELECT NAME, email, REPLACE(email, SUBSTR(email, INSTR(email, '@')+1, 3), '###') '#mail' from professor
+SELECT NAME, email, REPLACE(email, SUBSTR(email, INSTR(email, '@')+1, 3), '###') '#mail' 
+from professor
 /*
 	15. 교수테이블의  email 주소의 @앞의 3자리를 ###으로 치환하여 출력하기  교수의 이름, email, #mail을 출력하기
 */
@@ -91,7 +91,9 @@ SELECT NAME, email, REPLACE(email, LEFT(email, 3), '###') '#mail' FROM professor
 /*
 	16. 사원테이블에서 사원이름에 *를 왼쪽에 채운  6자리수 이름과, 업무와 급여를 출력한다.
 */
-SELECT Rpad(ename, 6, '*') 이름, job , salary FROM emp
+SELECT lpad(ename, 6, '*') 이름, job , salary FROM emp
+-- 16-1. 사원테이블에서 사원이름에 양쪽에 * 채운 7자리수 이름과
+SELECT RPAD(LPAD(ename, 5, '*'), 7, '*'), job salary FROM emp
 /*
 	17. 교수들의 이름과 근무 개월 수를 출력하기
     근무개월수는 현재 일을 기준으로  일자를 계산하여 30으로 나눈 후 개월 수는 절삭하여 정수로 출력하기
@@ -117,6 +119,12 @@ WHERE deptno IN (101,201,301)
 UNION
 SELECT NAME, LPAD(id, 20, '#') id FROM student
 WHERE major1 IN (101,201,301)
+-- 20 -1 각각 교수는 교수 , 학생을 학생을 붙여서 출력하기
+SELECT CONCAT(NAME, '교수') name, RPAD(id, 20, '$') id FROM professor
+WHERE deptno IN (101,201,301)
+UNION
+SELECT concat(NAME, '학생'), LPAD(id, 20, '#') id FROM student
+WHERE major1 IN (101,201,301)
 /*
 	21. 2025년 1월 10일 부터 2025년 5월 20일까지 개월수를 반올림해서 정수 출력하기
 */
@@ -124,4 +132,5 @@ SELECT round(DATEDIFF('2025-05-20', '2025-01-10')/30) 정답
 /*
 	22. EMP 테이블에서 10번 부서 직원의 현재까지의 이름, 입사일, 근무 월수를 계산하여   출력하기.  
 */
-SELECT ename, hiredate, truncate(DATEDIFF(NOW(), hiredate)/30, 0) 근무월수 FROM emp
+SELECT ename, hiredate, round(DATEDIFF(NOW(), hiredate)/30) 근무월수 FROM emp
+WHERE deptno = 10
