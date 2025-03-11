@@ -7,6 +7,16 @@
 			index 생성 : create index
 			....
 		alter : 객체 수정 명령어. 컬럼 추가, 컬럼 제거, 컬럼 크기 조정...
+			컬럼 추가 : alter table 테이블명 add 컬럼명 자료형
+			컬럼 크기 변경 : alter table 테이블명 modify 컬럼명 자료형
+			컬럼 이름 변경 : alter table 테이블명 change 원본컬럼명 새로운컬럼명 자료형
+			컬럼 제거 : alter table 테이블명 drop 컬럼명
+			제약조건 추가 : alter table 테이블명 add constraint ...
+			제약조건 제거 : alter table 테이블명 drop constraint 제약조건 이름
+		
+		제약조건 조회
+			information_schema 데이터베이스 선택
+			table_constraints 테이블 조회
 		drop : 객체 제거 명령어
 		truncate : 데이터제거. 객체와 데이터 분리.
 	
@@ -212,6 +222,37 @@ USE information_schema -- information_schema DATABASE 선택
 							  -- information_schema의 테이블/뷰를information_schema	
 SELECT * FROM TABLE_CONSTRAINTS
 WHERE TABLE_NAME = 'professor_101'
-
 USE gdjdb
-SELECT * FROM student
+-- 제약조건 제거하기
+-- 외래키 제거
+ALTER TABLE professor_101 DROP FOREIGN KEY professor_101_ibfk_1
+ALTER TABLE professor_101 DROP FOREIGN KEY professor_101_ibfk_2
+-- 기본키 제거
+ALTER TABLE professor_101 DROP PRIMARY KEY
+
+/*
+	drop 명령어 : 객체 제거
+*/
+SHOW TABLES
+DESC test1
+-- test1 테이블을 제거하기
+DROP TABLE test1
+
+/*
+	truncate : 테이블과 데이터 분리
+*/
+SELECT * FROM professor_101
+-- delete 명령문 비교 : autocommit false
+SET autocommit = FALSE --자동으로 commit 안함
+SHOW variables LIKE 'autocomit%'
+SELECT * FROM professor_101
+DELETE FROM professor_101
+SELECT * FROM professor_101
+ROLLBACK -- TCL 트랜젝션 취소
+SELECT * FROM professor_101
+
+-- truncate로 데이터 제거 : rollback 불가능.
+TRUNCATE TABLE  professor_101
+SELECT * FROM professor_101
+ROLLBACK
+SELECT * FROM professor_101
